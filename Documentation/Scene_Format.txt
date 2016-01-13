@@ -1,0 +1,75 @@
+Scene files feature 5 main elements in the XGL file, each with a number of attributes. They are SPRITE for placing sprites, TEXT for placing text, SCENE_BUTTON, SCENE_RANGE for linking to other scenes or subscenes, and CONSTRUCT for specifiying boundaries that sprites cannot pass.
+
+Sprite element:
+Attribute 0 - Declaration, always SPRITE
+Attribute 1 - String reference name
+Attribute 2 - X position
+Attribute 3 - Y position
+Attribute 4 - Sprite width
+Attribute 5 - Sprite weight
+Attribute 6 - Sprite image source
+Attribute 7 - Sprite clip file. If sprite is not clipped, this is set to "no_clip"
+
+Text element:
+Attribute 0 - Declaration, always TEXT
+Attribute 1 - X position
+Attribute 2 - Y position
+Attribute 3 - Delay of typing effect in milliseconds. A value of zero displays the text all at once
+Attribute 4 - String for the actual text to display
+Attribute 5 - Font to use. Must be described in Config/font.xgl and said fonts must be loaded
+Attribute 6 - Positioning of the text relative to Attribute. Values can be LEFT, RIGHT, or CENTER
+
+Scene Button element:
+Attribute 0 - Declaration, always SCENE_BUTTON
+Attribute 1 - XGL scene file or subscene to link to
+Attribute 2 - The button used to activate the scene. May be, LEFT, RIGHT, UP, DOWN, BUTTON1, or BUTTON2
+
+Scene Range element
+Attribute 0 - Declaration, always SCENE_RANGE
+Attribute 1 - XGL scene file or subscene to link to
+Attribute 2 - Name of sprite (Sprite element, Attribute 1) that will trigger the scene change
+Attribute 3 - X minimum range for activation
+Attribute 4 - Y minimum range for activation
+Attribute 5 - X maximium range for activation
+Attribute 6 - Y maximum range for activation
+
+Scene Button-Range element
+Attribute 0 - Declaration, always SCENE_BUTTON_RANGE
+Attribute 1 - XGL scene file or subscene to link to
+Attribute 2 - The button used to activate the scene. May be, LEFT, RIGHT, UP, DOWN, BUTTON1, or BUTTON2
+Attribute 3 - Name of sprite (Sprite element, Attribute 2) that will trigger the scene change
+Attribute 4 - X minimum range for activation
+Attribute 5 - Y minimum range for activation
+Attribute 6 - X maximium range for activation
+Attribute 7 - Y maximum range for activation
+
+Construct Element*
+Attribute 0 - Declaration, always CONSTRUCT
+Attribute 1 - Name of sprite (Sprite element, Attribute 1) to attach a construct to. Useful for creating bounding boxes for sprites. If no sprite is used, this is set to "no_sprite"
+Attribute 2 - X position
+Attribute 3 - Y position
+Attribute 4 - Construct width
+Attribute 5 - Construct height
+
+*Note: If Attribute 1 is not set to "no_sprite", the values will be taken from the sprite, e.g. the constructs x, y, width, and height will automatically match the sprites and Attributes 2-5 *must* be omitted.
+
+Scenes have dedicated animation elements to help as well. In a Scene file, these elements should be placed after all of the other elements have been defined.
+
+Animation priorities describe the order in which animations happen. Once the game allows animations to occur, each animation is performed. Animations with a priority of 0 are executed first. If multiple animations have a priority of 0, they are executed at the same time. Once all animations with a priority of 0 have finished, animations with a priority of 1 will be executed, so on and so forth. If an animation is designated to repeat, it's animation priority of automatically set to -1 by the game, so other animation priorities won't have to wait for something that will never actually finish.
+
+Sprite Translation Element
+Attribute 0 - Declaration, always TRANSLATE_SPRITE
+Attribute 1 - Name of sprite (Sprite element, Attribute 1) to translate
+Attribute 2 - Animation priority
+Attribute 3 - Starting X position. If this is its current X position, this is set to "no_value"
+Attribute 4 - Starting Y position. If this is its current Y position, this is set to "no_value"
+Attribute 5 - Ending X position.
+Attribute 6 - Ending Y position.
+Attribute 7 - Total length of the translation in frames
+Attribute 8 - Repeat translation. Set to "repeat" or "no_repeat"
+
+Subscenes dictate "scenes within scenes". All elements up until a Subscene are loaded. Subscenes must be entered via a button press (SUBSCENE_BUTTON), entering within a specific range (SUBSCENE_RANGE) or a combination of the two (SUBSCENE_BUTTON_RANGE). The main scene does not change. Subscenes only add elements to the current scene. It's possible to link multiple subscenes by including another subscene within it. Note, a subscene will have access to all loaded elements from previous scenes. Hence a subscene can translate a sprite (using TRANSLATE_SPRITE) that was defined in the scene that called it. This can be achieved by declaring a scene the Define element.
+
+Define Element:
+Attribute 0 - Declaration, always DEFINE
+Attribute 1 - Type of scene. Use "scene" for main scenes, and "sub_scene" for subscenes.
